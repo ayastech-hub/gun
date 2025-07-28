@@ -1,4 +1,3 @@
-//<INSERT CODE FROM snipe.js HERE>
 const { ethers } = require('ethers');
 const dotenv = require('dotenv');
 const { getWallet } = require('./walletManager');
@@ -6,12 +5,12 @@ const { getWallet } = require('./walletManager');
 dotenv.config();
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-const routerABI = require('./abis/uniswapRouter.json'); // You must supply this ABI
-const ERC20 = require('./abis/erc20.json'); // Basic ERC20 ABI
+const routerABI = require('./abis/uniswapRouter.json');
+const ERC20 = require('./abis/erc20.json');
 
-const UNISWAP_ROUTER_ADDRESS = '0x327Df1E6de05895d2ab08513aaDD9313Fe505d86'; // Uniswap Base Router
+const UNISWAP_ROUTER_ADDRESS = '0x327Df1E6de05895d2ab08513aaDD9313Fe505d86';
 
-const pendingSnipes = {}; // token => user config
+const pendingSnipes = {};
 
 // 👟 Manual Buy
 async function handleBuy(userId, ethAmount, chatId) {
@@ -41,9 +40,9 @@ async function handleBuy(userId, ethAmount, chatId) {
         gasLimit: 3000000
       }
     );
-    console.log(✅ Buy TX sent: ${tx.hash});
+    console.log(`✅ Buy TX sent: ${tx.hash}`);
   } catch (err) {
-    console.error(❌ Buy failed: ${err.message});
+    console.error(`❌ Buy failed: ${err.message}`);
   }
 }
 
@@ -52,9 +51,9 @@ async function listenForLiquidityAndBuy(tokenAddress, ethAmount, userId) {
   const { wallet, address } = await getWallet(userId);
   if (!wallet) return;
 
-  const factoryABI = require('./abis/uniswapFactory.json'); // Supply this
+  const factoryABI = require('./abis/uniswapFactory.json');
   const factory = new ethers.Contract(
-    '0xBEaB1db1bF1e4A061D69cE2A1f3aA3B774BdF342', // UniswapV2Factory (Base)
+    '0xBEaB1db1bF1e4A061D69cE2A1f3aA3B774BdF342',
     factoryABI,
     provider
   );
@@ -63,12 +62,12 @@ async function listenForLiquidityAndBuy(tokenAddress, ethAmount, userId) {
     if (
       [token0.toLowerCase(), token1.toLowerCase()].includes(tokenAddress.toLowerCase())
     ) {
-      console.log(🚀 Detected liquidity for ${tokenAddress} at ${pairAddress});
-      await handleBuy(userId, ethAmount, null); // call buy
+      console.log(`🚀 Detected liquidity for ${tokenAddress} at ${pairAddress}`);
+      await handleBuy(userId, ethAmount, null);
     }
   });
 
-  console.log(⏳ Watching for liquidity on ${tokenAddress}...);
+  console.log(`⏳ Watching for liquidity on ${tokenAddress}...`);
 }
 
 // 🛒 Sell Tokens
@@ -96,16 +95,16 @@ async function handleSell(userId, percent, chatId) {
       address,
       deadline
     );
-    console.log(✅ Sell TX sent: ${tx.hash});
+    console.log(`✅ Sell TX sent: ${tx.hash}`);
   } catch (err) {
-    console.error(❌ Sell failed: ${err.message});
+    console.error(`❌ Sell failed: ${err.message}`);
   }
 }
 
 // 👤 Save Token + Snipe Info
 function setSnipeConfig(userId, tokenAddress, ethAmount, slippage = 15) {
   pendingSnipes[userId] = { token: tokenAddress, ethAmount, slippage };
-  console.log(📍 Snipe set for ${tokenAddress} @ ${ethAmount} ETH);
+  console.log(`📍 Snipe set for ${tokenAddress} @ ${ethAmount} ETH`);
 }
 
 module.exports = {

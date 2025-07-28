@@ -1,14 +1,14 @@
-//<INSERT CODE FROM pnlTracker.js HERE>
 const { ethers } = require('ethers');
 const { getWallet } = require('./walletManager');
 
-const ERC20 = require('./abis/erc20.json'); // Basic token ABI
+const ERC20 = require('./abis/erc20.json');
 const routerABI = require('./abis/uniswapRouter.json');
+
 const prices = {}; // Stores: { userId: { tokenAddress: { amount, buyPriceEth } } }
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 const ROUTER = new ethers.Contract(
-  '0x327Df1E6de05895d2ab08513aaDD9313Fe505d86', // Uniswap V2 router on Base
+  '0x327Df1E6de05895d2ab08513aaDD9313Fe505d86',
   routerABI,
   provider
 );
@@ -27,7 +27,7 @@ async function showPositions(userId) {
   const { wallet, address } = await getWallet(userId);
   if (!wallet) return "🔒 Wallet not set.";
 
-  let report = 📊 Your Positions:\n\n;
+  let report = `📊 Your Positions:\n\n`;
 
   for (const [tokenAddress, data] of Object.entries(userHoldings)) {
     try {
@@ -47,14 +47,14 @@ async function showPositions(userId) {
       const pnl = currentTotalValue - entryTotalValue;
       const percent = ((pnl / entryTotalValue) * 100).toFixed(2);
 
-      report += 💠 ${symbol}\n;
+      report += `💠 ${symbol}\n`;
       report += `  Amount: ${balance.toFixed(2)}\n`;
       report += `  Entry Price: Ξ ${data.buyPriceEth.toFixed(6)}\n`;
       report += `  Current Price: Ξ ${tokenPriceEth.toFixed(6)}\n`;
       report += `  PnL: ${pnl >= 0 ? '📈 +' : '📉 '}${pnl.toFixed(6)} ETH (${percent}%)\n\n`;
 
     } catch (err) {
-      report += ❌ Failed to fetch info for ${tokenAddress}\n;
+      report += `❌ Failed to fetch info for ${tokenAddress}\n`;
     }
   }
 
