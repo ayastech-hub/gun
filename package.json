@@ -1,0 +1,17 @@
+{
+  "name": "basesniperx-bot",
+  "version": "1.0.0",
+  "description": "A Base Chain sniper bot with Telegram UI",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "keywords": ["sniper", "telegram", "base", "bot", "uniswap"],
+  "author": "Abubakar Yahaya",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ethers": "^6.8.1",
+    "node-telegram-bot-api": "^0.61.0"
+  }
+}
