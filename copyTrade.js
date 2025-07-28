@@ -1,4 +1,3 @@
-//<INSERT CODE FROM copyTrade.js HERE>
 const { ethers } = require('ethers');
 const { getWallet } = require('./walletManager');
 const { handleBuy, handleSell } = require('./snipe');
@@ -32,7 +31,7 @@ function stopCopy(userId) {
 function showCopyStatus(userId) {
   const cfg = copyConfigs[userId];
   if (!cfg) return "📭 No copy-trading active.";
-  return 📋 Copying: ${cfg.target}\n💰 ETH per trade: ${cfg.ethAmount};
+  return `📋 Copying: ${cfg.target}\n💰 ETH per trade: ${cfg.ethAmount}`;
 }
 
 // 🔁 Start Monitoring Blockchain for Copied Trades
@@ -47,7 +46,7 @@ function startCopyListener() {
         if (cfg.target === from) {
           // 🧠 Simplified filter: ETH -> Token (can be extended to detect swapExactETHForTokens)
           if (tx.to?.toLowerCase().includes("router") || tx.data?.includes("0x7ff36ab5")) {
-            console.log(📡 Copied buy detected from ${from});
+            console.log(`📡 Copied buy detected from ${from}`);
             await handleBuy(userId, cfg.ethAmount, null);
           }
 
